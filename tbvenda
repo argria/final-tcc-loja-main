@@ -1,0 +1,34 @@
+<?php
+include("protect.php");
+if(!isset($_SESSION)){
+    session_start();
+}
+include_once('config.php');
+if (isset($_POST['submit'])) {
+    $idVenda = $_POST['idVenda'];
+    $emailLogin = $_POST['emailLogin'];
+    $nomeCategoria = $_POST['nomeCategoria'];
+    $precoProduto = $_POST['precoProduto'];
+    $qtdeProduto = $_POST['qtdeProduto'];
+    $imagem=$_FILES['imagem'];
+    $pasta="imagens/";
+    $nomearquivo=$imagem['name'];
+    $extensao= strtolower(pathinfo($nomearquivo, PATHINFO_EXTENSION));
+    if ($extensao!="png"&&$extensao!="jpg"&&$extensao!="jpeg"){
+    echo "<script>alert('Formato de imagem não aceito!');</script>";
+      }else{
+    $mover=move_uploaded_file($imagem["tmp_name"], "./".$pasta. $imagem['name']);
+    $arquivo= $pasta.$imagem['name'];
+    $sql = ("INSERT INTO tbproduto(nomeProduto,idProduto,nomeCategoria,precoProduto,qtdeProduto, imgProduto) VALUES ('$nomeProduto','$idProduto','$nomeCategoria','$precoProduto','$qtdeProduto','$arquivo')");
+    $result = pg_query($conexao, $sql);
+    if ($result) {
+        echo "<script>alert('Registro inserido com sucesso.');</script>";
+        header ("location: paginainicial2Cli.php");
+    } else {
+        echo "<script>alert('Ocorreu algum erro.');</script>";
+        echo "<script>window.history.back();</script>";
+        }
+    }
+}
+
+?>
